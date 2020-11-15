@@ -17,32 +17,13 @@
   <body>
     <div id="obniz-debug"></div>
 
-    <div class="wrap">
-      <div class="detect">
-        <h3 class="text-center">Detect Remote Control Signal</h3>
-        <div>
-          <button class="btn btn-primary" id="detect">Detect Remote Control Signal</button>
-        </div>
-        <p class="text-justify" id="print">undefined</p>
-      </div>
-    </div>
-
     <script>
       var obniz = new Obniz("OBNIZ_ID_HERE");
       obniz.onconnect = async function() {
-        const module = obniz.wired('IRModule', { vcc: 0, send: 1, recv: 2, gnd: 3 });
         const homekit = obniz.wired("IoTHomeKit");
-
-        $("#detect").on("click", function() {
-          module.start();
-          module.ondetect = async function(arr) {
-            $("#print").text(JSON.stringify(arr));
-            console.log(JSON.stringify(arr));
-            await homekit.saveToStorage('heating', arr);
-            obniz.display.clear();
-            obniz.display.print("detected");
-          }
-        });
+        const signalVal = await homekit.loadFromStorage('heating');
+        const module = obniz.wired('IRModule', { vcc: 0, send: 1, recv: 2, gnd: 3 });
+        module.send(signalVal);
       };
     </script>
   </body>
