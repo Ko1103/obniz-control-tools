@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/css/starter-sample.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script
+      src="https://unpkg.com/obniz@3.9.0/obniz.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="obniz-debug"></div>
+
+    <div class="wrap">
+      <div class="detect">
+        <h3 class="text-center">Detect Remote Control Signal</h3>
+        <div>
+          <button class="btn btn-primary" id="detect">Detect Remote Control Signal</button>
+        </div>
+        <p class="text-justify" id="print">undefined</p>
+      </div>
+    </div>
+
+    <script>
+      var obniz = new Obniz("OBNIZ_ID_HERE");
+      obniz.onconnect = async function() {
+        var module = obniz.wired('IRModule', { vcc: 0, send: 1, recv: 2, gnd: 3 });
+
+        $("#detect").on("click", function() {
+          module.start();
+          module.ondetect = function(arr) {
+            $("#print").text(JSON.stringify(arr));
+            console.log(JSON.stringify(arr));
+            obniz.display.clear();
+            obniz.display.print("detected");
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
