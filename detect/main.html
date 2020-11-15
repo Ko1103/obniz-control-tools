@@ -20,6 +20,11 @@
     <div class="wrap">
       <div class="detect">
         <h3 class="text-center">Detect Remote Control Signal</h3>
+        <input
+            type="text"
+            id="text"
+            placeholder="Input in freely"
+          />
         <div>
           <button class="btn btn-primary" id="detect">Detect Remote Control Signal</button>
         </div>
@@ -38,7 +43,7 @@
           module.ondetect = async function(arr) {
             $("#print").text(JSON.stringify(arr));
             console.log(JSON.stringify(arr));
-            await homekit.saveToStorage('heating', JSON.stringify(arr));
+            await homekit.saveToStorage($("#text").val(), JSON.stringify(arr));
             obniz.display.clear();
             obniz.display.print("detected");
           }
